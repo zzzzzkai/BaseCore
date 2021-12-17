@@ -21,6 +21,7 @@ using NPOI.XSSF.UserModel;
 using DataModel;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using System.Diagnostics;
 
 namespace PeHubCore.Controllers
 {
@@ -52,10 +53,13 @@ namespace PeHubCore.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> t001()
         {
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             IWorkbook workbook = null;
             var files = Request.Form.Files;
             var repeatData = new List<OtherBill>();//重复或者错误的条数
             var importlogs = new Dictionary<bool, string>();//记录导入后的结果信息
+            
             foreach (var file in files)
             {
                 var list = new List<OtherBill>();//收集导入表的数据
@@ -132,20 +136,34 @@ namespace PeHubCore.Controllers
                         {
                             importlogs.Add(isOk, file.FileName + "表成功插入" + list.Count + "条;" + "重复" + listToRemoval.Count + "条;");
                         }
-                        else {
+                        else
+                        {
+                            importlogs.Add(isOk, file.FileName + "表插入失败" + list.Count + "条;" + "请重新导入" + file.FileName + "表;");
+                        }
+                        continue;
+                    }
+                    else {
+                        //导入的表批量插入
+                        var isOk = _otherBillService.InsertList(list);
+                        if (isOk)
+                        {
+                            importlogs.Add(isOk, file.FileName + "表成功插入" + list.Count + "条;" + "重复" + listToRemoval.Count + "条;");
+                        }
+                        else
+                        {
                             importlogs.Add(isOk, file.FileName + "表插入失败" + list.Count + "条;" + "请重新导入" + file.FileName + "表;");
                         }
                         continue;
                     }
                     
                 }
-
-
             }
-            result.returnMsg = importlogs.ToJson();
+            result.returnMsg = importlogs.ToJson()+ sw.Elapsed;
             result.success = true;
             result.returnData = repeatData;
             result.countSum = repeatData.Count;
+            
+            sw.Stop();
             return Ok(result);
         }
 
