@@ -1,8 +1,12 @@
 ﻿using DataModel;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
 using Repository.IRepository;
 using Service.IService;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Service.Service
@@ -15,19 +19,23 @@ namespace Service.Service
             _otherBillRepository = otherBillRepository;
             base._baseRepository = _otherBillRepository;
         }
-        public List<OtherBill> ImportBill()
-        {
-
-            try
+       
+        /// <summary>
+        /// 获取excel版本
+        /// </summary>
+        /// <param name="ext"></param>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public IWorkbook Getversion(string ext,StreamReader stream) {
+            if (ext == "xls")
             {
-                
-                return null;
+                return new HSSFWorkbook(stream.BaseStream);
             }
-            catch (Exception e)
+            else
             {
-
-                throw e ; 
+                return new XSSFWorkbook(stream.BaseStream);
             }
+           
         }
     }
 }

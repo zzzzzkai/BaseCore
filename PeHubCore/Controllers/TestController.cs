@@ -19,6 +19,8 @@ using ServiceExt;
 using NPOI;
 using NPOI.XSSF.UserModel;
 using DataModel;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
 
 namespace PeHubCore.Controllers
 {
@@ -50,6 +52,7 @@ namespace PeHubCore.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> t001()
         {
+            IWorkbook workbook = null;
             var files = Request.Form.Files;
             var repeatData = new List<OtherBill>();//重复或者错误的条数
             var importlogs = new Dictionary<bool, string>();//记录导入后的结果信息
@@ -59,8 +62,9 @@ namespace PeHubCore.Controllers
                 var listcopy = _otherBillService.FindAll().ToList();//查询数据库已有数据，做对比去重，避免重复插入
                 using (StreamReader sr = new StreamReader(file.OpenReadStream()))
                 {
-                    
-                    var workbook = new XSSFWorkbook(sr.BaseStream);
+                    //文件后缀名
+                    var Ext = file.FileName.Split('.').LastOrDefault();
+                    workbook = _otherBillService.Getversion(Ext,sr);
                     //查出有多少行数据
                     var end = workbook.GetSheetAt(0).LastRowNum;
                     //确认表的存在账单数据
