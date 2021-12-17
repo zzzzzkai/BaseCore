@@ -1,13 +1,12 @@
 ﻿using DataModel;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Service.IService
 {
-    public interface IWebApiFuncService : IBaseService<WebApiFunc>
+    public interface IOtherBillService : IBaseService<OtherBill>
     {
+       List<OtherBill> ImportBill();
     }
 }

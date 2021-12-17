@@ -10,9 +10,9 @@ using Repository.IRepository;
 namespace Repository.Repository
 {
 	/// <summary>
-	/// IOrderRepository
+	/// IHisBillRepository
 	/// </summary>	
-    public class OrdersRepository : BaseRepository<Orders>,IOrdersRepository
+    public class HisBillRepository : BaseRepository<HisBill>,IHisBillRepository
     {
 
     }

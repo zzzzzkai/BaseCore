@@ -44,6 +44,15 @@ namespace Service.IService
         /// <returns></returns>
         T Insert(T entity);
 
+
+        /// <summary>
+        /// 写入实体数据
+        /// </summary>
+        /// <param name="entity">实体类</param>
+        /// <returns></returns>
+        bool InsertList(List<T> entity);
+
+
         /// <summary>
         /// 更新实体数据
         /// </summary>

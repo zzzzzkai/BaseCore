@@ -1,7 +1,7 @@
 <#+
 	public class config
 	{
-        public static readonly string ConnectionString = File.Exists(@"C:\my-file\dbCountPswSolsticeALDDD.txt") ? File.ReadAllText(@"C:\my-file\dbCountPswSolsticeALDDD.txt").Trim(): "server=121.201.110.127;uid=sa;pwd=FEEg32f2F2110;database=Pe_Hub";
+        public static readonly string ConnectionString = File.Exists(@"C:\my-file\dbCountPswSolsticeALDDD.txt") ? File.ReadAllText(@"C:\my-file\dbCountPswSolsticeALDDD.txt").Trim(): "server=121.201.110.127;uid=sa;pwd=FEEg32f2F2110;database=kr_Reconciliation";
         public static readonly string DbDatabase = "";
         public static readonly string TableName = "";
 	}

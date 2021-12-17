@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DataModel.ClusModel;
 using DataModel.Other;
 using IdentityModel.Client;
 using log4net;
@@ -17,6 +16,9 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Service.IService;
 using ServiceExt;
+using NPOI;
+using NPOI.XSSF.UserModel;
+using DataModel;
 
 namespace PeHubCore.Controllers
 {
@@ -29,11 +31,14 @@ namespace PeHubCore.Controllers
     {
         private readonly IH_AdminService _H_AdminService;
         private IWebHostEnvironment _hostEnvironment;
-        public TestController(IH_AdminService H_AdminService,ICommonService commonService, IMemoryCache _cache, IWebHostEnvironment hostEnvironment)
+        private IOtherBillService _otherBillService;
+
+        public TestController(IH_AdminService H_AdminService,ICommonService commonService, IMemoryCache _cache, IWebHostEnvironment hostEnvironment, IOtherBillService otherBillService)
         {
             _H_AdminService = H_AdminService;
             _commonService = commonService;
             _cacheService = _cache;
+            _otherBillService = otherBillService;
             _hostEnvironment = hostEnvironment;
         }
         /// <summary>
@@ -42,35 +47,102 @@ namespace PeHubCore.Controllers
         /// <param name="pdata"></param>
         /// <returns></returns>
         [HttpPost("t001")]
-        public IEnumerable<WeatherForecast> t001([FromBody]encryData pdata)
+        [AllowAnonymous]
+        public async Task<IActionResult> t001()
         {
-            //var stt = JsonConvert.SerializeObject(new { code = "mic", name = "myname" });
-            //var sss= SecurityHelper.AESEncrypt(stt, "0123456789abcdef");
-            var ss = new MemoryCaching(_cacheService);
-
-            if (ss.Get("hao") == null)
+            var files = Request.Form.Files;
+            var repeatData = new List<OtherBill>();//重复或者错误的条数
+            var importlogs = new Dictionary<bool, string>();//记录导入后的结果信息
+            foreach (var file in files)
             {
-                ss.Set("hao", "dsdsa");
+                var list = new List<OtherBill>();//收集导入表的数据
+                var listcopy = _otherBillService.FindAll().ToList();//查询数据库已有数据，做对比去重，避免重复插入
+                using (StreamReader sr = new StreamReader(file.OpenReadStream()))
+                {
+                    
+                    var workbook = new XSSFWorkbook(sr.BaseStream);
+                    //查出有多少行数据
+                    var end = workbook.GetSheetAt(0).LastRowNum;
+                    //确认表的存在账单数据
+                    if (end<2) {
+                        importlogs.Add(false, file.FileName + "表中没有账单数据，请添加后确认保存好再导入");
+                        continue;
+                    }
+                    //循环行数
+                    for (int i = 2; i <= end; i++)
+                    {
+                        //默认第0行 和第1行不要
+                        //找出第i行
+                        var row = workbook.GetSheetAt(0).GetRow(i).Cells;
+                        //拼接数据
+                        list.Add(new OtherBill()
+                        {
+                            OrderNumber = row[0].ToString(),
+                            TraceNumber = row[1].ToString(),
+                            OrderType = row[2].ToString(),
+                            TraceAmount = row[3].ToString(),
+                            TraceTime = Convert.ToDateTime(row[4].DateCellValue),
+                            Merchants = row[5].ToString(),
+                            commission = row[6].ToString(),
+                            BizType = row[7].ToString(),
+                            TraceStatus = Double.Parse(row[3].ToString()) > 0 ? "ZF" : "TF",
+                        });
+                    }
+                    //导入数据校验，避免重复的支付记录
+                    var Dis = list.Distinct().ToList();//自身找重复后的数据
+                    var isSame = list.Where(x => (!Dis.Exists(t => t.Equals(x)))).ToList();//找出同一张导入表中  相同的数据
+                    if (isSame.Count !=0)
+                    {
+                        foreach (var item in isSame)
+                        {
+                            //记录未能成功导入的数据
+                            repeatData.Add(item);
+                            //从导入信息中删除
+                            list.Remove(item);
+                        }
+                        //导入的表批量插入
+                        var isOk = _otherBillService.InsertList(list);
+                        if (isOk)
+                        {
+                            importlogs.Add(isOk, file.FileName + "表成功插入" + list.Count + "条;" + "重复" + isSame.Count + "条;");
+                        }
+                        else
+                        {
+                            importlogs.Add(isOk, file.FileName + "表插入失败" + list.Count + "条;" + "请重新导入" + file.FileName + "表;");
+                        }
+                        continue;
+                    }
+                    //查重复的订单
+                    var listToRemoval = list.Where(a => listcopy.Exists(t => (a.OrderNumber.Contains(t.OrderNumber) && a.TraceAmount.Contains(t.TraceAmount)))).ToList();
+                    if (listToRemoval.Count != 0)
+                    {
+                        //去重
+                        foreach (var item in listToRemoval)
+                        {
+                            repeatData.Add(item);
+                            list.Remove(item);
+                        }
+                        //导入的表批量插入
+                        var isOk = _otherBillService.InsertList(list);
+                        if (isOk)
+                        {
+                            importlogs.Add(isOk, file.FileName + "表成功插入" + list.Count + "条;" + "重复" + listToRemoval.Count + "条;");
+                        }
+                        else {
+                            importlogs.Add(isOk, file.FileName + "表插入失败" + list.Count + "条;" + "请重新导入" + file.FileName + "表;");
+                        }
+                        continue;
+                    }
+                    
+                }
+
+
             }
-
-            if (string.IsNullOrEmpty(getSession<string>("openid")))
-            {
-                setSession("openid", "555566");
-
-            }
-
-            log.Info("testinfo");
-            log.Error("testerr");
-            log.Debug("testerr");
-            log.Warn("testerr");
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateTime.Now.AddDays(index),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = pdata.data.code
-            })
-            .ToArray();
+            result.returnMsg = importlogs.ToJson();
+            result.success = true;
+            result.returnData = repeatData;
+            result.countSum = repeatData.Count;
+            return Ok(result);
         }
 
         [HttpGet("logTest")]

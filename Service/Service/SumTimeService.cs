@@ -10,11 +10,9 @@ namespace Service.Service
     {
         private readonly ISumTimeRepository _sumTimeRepository;
         private readonly IPersonSumRepository _personSumRepository;
-        private readonly ITeamSumRepository _teamSumRepository;
-        public SumTimeService(ISumTimeRepository sumTimeRepository,IPersonSumRepository personSumRepository, ITeamSumRepository teamSumRepository) {
+        public SumTimeService(ISumTimeRepository sumTimeRepository,IPersonSumRepository personSumRepository ) {
             _sumTimeRepository = sumTimeRepository;
             _personSumRepository = personSumRepository;
-            _teamSumRepository = teamSumRepository;
         }
         /// <summary>
         /// 获取个人时段号源
@@ -49,36 +47,5 @@ namespace Service.Service
         }
 
 
-        /// <summary>
-        /// 获取团体时段号源
-        /// </summary>
-        /// <param name="date_Time"></param>
-        /// <returns></returns>
-        public object GetSumTimeTeam(DateTime date_Time,string team_LncCode)
-        {
-            try
-            {      
-                var sumList = (from a in _teamSumRepository.FindListByClause(x=>x.team_Date==date_Time && x.team_LncCode== team_LncCode)
-                               join b in _sumTimeRepository.FindListByClause(z=>z.sumtime_Flag=="group")
-                               on a.sumtime_Code equals b.sumtime_Code
-                               where a.team_Date == date_Time 
-                               select new
-                               {
-                                   b.sumtime_Code,
-                                   b.sumtime_Name,
-                                   b.sumtime_BegTime,
-                                   b.sumtime_EndTime,
-                                   a.team_Sum,
-                                   a.team_Surplus,
-                                   a.team_Already
-                               }).ToList();
-                return sumList;
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-        }
     }
 }

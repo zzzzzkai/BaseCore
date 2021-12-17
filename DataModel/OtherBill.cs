@@ -6,9 +6,9 @@ using System.Text;
 namespace DataModel
 {
 	 ///<summary>
-	 ///TeamSum
+	 ///OtherBill
 	 ///</summary>
-	 public class TeamSum
+	 public class OtherBill
 	 {
 	 	/// <summary>
         /// id
@@ -17,68 +17,59 @@ namespace DataModel
 		public int id { get; set; }
 
 		/// <summary>
-        /// 团体号源日期
+        /// 订单号（渠道唯一标识）
         /// </summary>
 		[SugarColumn(IsNullable =true)]
-		public DateTime? team_Date { get; set; }
+		public string OrderNumber { get; set; }
 
 		/// <summary>
-        /// 团体号源总数（天）
+        /// 交易流水号
         /// </summary>
 		[SugarColumn(IsNullable =true)]
-		public int? team_Sum { get; set; }
+		public string TraceNumber { get; set; }
 
 		/// <summary>
-        /// 团体号源已约数（天）
+        /// 支付方式（和His保持一致）
         /// </summary>
 		[SugarColumn(IsNullable =true)]
-		public int? team_Already { get; set; }
+		public string OrderType { get; set; }
 
 		/// <summary>
-        /// 团体号源剩余数（天）
+        /// 交易金额（单位：分，退费为负数）
         /// </summary>
 		[SugarColumn(IsNullable =true)]
-		public int? team_Surplus { get; set; }
+		public string TraceAmount { get; set; }
 
 		/// <summary>
-        /// 团体号源时间段
+        /// 交易时间（yyyy-MM-dd HH:mm:ss）
         /// </summary>
 		[SugarColumn(IsNullable =true)]
-		public string team_Period { get; set; }
+		public DateTime? TraceTime { get; set; }
 
 		/// <summary>
-        /// team_LncCode
+        /// 商户号渠道
         /// </summary>
 		[SugarColumn(IsNullable =true)]
-		public string team_LncCode { get; set; }
+		public string Merchants { get; set; }
 
 		/// <summary>
-        /// 星期
+        /// 交易状态（ZF-支付、TF-退费）
         /// </summary>
 		[SugarColumn(IsNullable =true)]
-		public string team_Week { get; set; }
+		public string TraceStatus { get; set; }
 
 		/// <summary>
-        /// 团体休假标记（T休假，F已开）
+        /// 手续费
         /// </summary>
 		[SugarColumn(IsNullable =true)]
-		public string team_Flag { get; set; }
+		public string commission { get; set; }
 
 		/// <summary>
-        /// 团体时段
+        /// 交易信息（简要说明,如某某地方缴费\退费）
         /// </summary>
 		[SugarColumn(IsNullable =true)]
-		public string sumtime_Code { get; set; }
+		public string BizType { get; set; }
 
-		//开始时间
-		[SugarColumn(IsNullable = true)]
-		public string StartTime { get; set; }
-
-		//结束时间
-		[SugarColumn(IsNullable = true)]
-		public string EndTime { get; set; }
-
-
-
-	}
+	 
+	 }
 }	 

@@ -106,5 +106,9 @@ namespace Service.Service
  
         }
 
+        public bool InsertList(List<T> entity)
+        {
+            return _baseRepository.ExecuteBlueCopy(entity);
+        }
     }
 }

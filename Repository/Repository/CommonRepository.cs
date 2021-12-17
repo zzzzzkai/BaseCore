@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Repository.Repository
 {
-    public class CommonRepository : BaseRepository<UserInfo>, ICommonRepository
+    public class CommonRepository : BaseRepository<Tokens>, ICommonRepository
     {
         public bool InitDB()
         {

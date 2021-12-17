@@ -62,7 +62,7 @@ namespace PeHubCore.Middleware
                             await ms.CopyToAsync(originalBody);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
                         // 记录异常
                         //ErrorLogData(context.Response, ex);

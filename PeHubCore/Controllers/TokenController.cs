@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using DataModel.ClusModel;
 using DataModel.Other;
 using IdentityModel.Client;
 using log4net;

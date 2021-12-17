@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotNetCore.NPOI" Version="1.2.3" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Nancy" Version="2.0.0" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.10.304" />

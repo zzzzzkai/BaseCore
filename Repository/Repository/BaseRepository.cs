@@ -90,7 +90,7 @@ namespace Repository.Repository
         /// <returns></returns>
         public bool ExecuteBlueCopy(List<T> lis)
         {
-             return _db.Insertable(lis).UseSqlServer().ExecuteBlueCopy()>-1;
+             return _db.Insertable(lis).ExecuteCommand() > -1;
         }
 
 
@@ -213,26 +213,6 @@ namespace Repository.Repository
             return dt;
         }
 
-        /// <summary>
-        /// 批量导入
-        /// </summary>
-        /// <typeparam name="Entity"></typeparam>
-        /// <param name="list"></param>
-        /// <param name="tableName"></param>
-        public void BulkCopy<Entity>(List<Entity> list, string tableName)
-        {
-            SqlConnection conn = _db.Ado.Connection as SqlConnection;
-            using (SqlBulkCopy bulkCopy = new SqlBulkCopy(conn))
-            {
-                if (conn.State != ConnectionState.Open)
-                {
-                    conn.Open();
-                }
-                DataTable dt = ListToDataTable(list);
-                bulkCopy.DestinationTableName = tableName;
-                bulkCopy.WriteToServer(dt);
-            }
-        }
 
         /// <summary>
         /// 执行sql

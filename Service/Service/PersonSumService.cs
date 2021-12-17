@@ -13,13 +13,11 @@ namespace Service.Service
     {
 
         private readonly IPersonSumRepository _personSumRepository;
-        private readonly IOrdersRepository _orderRepository;
         private readonly ISumTimeRepository _sumTimeRepository;
-        public PersonSumService(IPersonSumRepository personSumRepository, IOrdersRepository orderRepository,
+        public PersonSumService(IPersonSumRepository personSumRepository,
             ISumTimeRepository sumTimeRepository)
         {
             _personSumRepository = personSumRepository;
-            _orderRepository = orderRepository;
             _baseRepository = _personSumRepository;
             _sumTimeRepository = sumTimeRepository;
         }
@@ -160,48 +158,7 @@ namespace Service.Service
         //    }
         //} 
 
-        /// <summary>
-        /// 个人号源修改
-        /// </summary>
-        /// <param name="date_Time">日期</param>
-        /// <param name="personSum_Code">时段code</param>
-        /// <param name="type">体检类型</param>
-        /// <returns></returns>
-        public bool PersonSumUpDate(DateTime date_Time, string sumtime_Code, string type, ref string error)
-        {
-            try
-            {
-                //获取当前时间段已约订单数量
-                var oldlst = _orderRepository.FindListByClause(x => x.begin_Time == date_Time && x.sumtime_Code == sumtime_Code && x.type == type && (x.state == "F" || x.state == "S")).Count();
-                //获取当前时间段号源数
-                var sum = _personSumRepository.FindByClause(x => x.person_Date == date_Time && x.person_Code == sumtime_Code && x.person_Type == type);
-                if (sum == null)
-                {
-                    return false;
-                }
-                sum.person_Already = oldlst;
-                if (sum.person_Already < 0)
-                {
-                    sum.person_Already = 0;
-                }
-                sum.person_Surplus = sum.person_Sum - sum.person_Already;
-                if (sum.person_Already < 0)
-                {
-                    //sum.person_Already = sum.person_Sum;
-                    sum.person_Surplus = 0;
-                    return false;
-                }
-                _personSumRepository.Update(sum);
-                return true;
-            }
-            catch (Exception e)
-            {
-
-                error = e.Message;
-                return false;
-            }
-
-        }
+      
 
         public object  GetMonthofDay(string StartTime, string type)
         {

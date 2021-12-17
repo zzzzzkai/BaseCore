@@ -10,9 +10,9 @@ using Repository.IRepository;
 namespace Repository.Repository
 {
 	/// <summary>
-	/// IUserInfoRepository
+	/// IOtherBillRepository
 	/// </summary>	
-    public class UserInfoRepository : BaseRepository<UserInfo>,IUserInfoRepository
+    public class OtherBillRepository : BaseRepository<OtherBill>,IOtherBillRepository
     {
 
     }

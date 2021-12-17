@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace Service.Service
 {
-    public class CommonService : BaseService<UserInfo>, ICommonService
+    public class CommonService : BaseService<Tokens>, ICommonService
     {
         #region 仓储
         private readonly ICommonRepository _commonRepository;

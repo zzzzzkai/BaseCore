@@ -26,6 +26,7 @@
     <PackageReference Include="AspNetCoreRateLimit" Version="3.0.5" />
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="5.0.1" />
+    <PackageReference Include="DotNetCore.NPOI" Version="1.2.3" />
     <PackageReference Include="IdentityServer4" Version="3.0.2" />
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="log4net" Version="2.0.8" />

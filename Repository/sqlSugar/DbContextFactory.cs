@@ -22,7 +22,7 @@ namespace Repository
                 DbType = DbType.SqlServer,
                 IsAutoCloseConnection = true,//开启自动释放模式和EF原理一样我就不多解释了
                 InitKeyType = InitKeyType.Attribute,//从特性读取主键和自增列信息
-                IsShardSameThread = true
+                //IsShardSameThread = true
                 //SlaveConnectionConfigs = new List<SlaveConnectionConfig>() {//从连接
                 //     new SlaveConnectionConfig() { HitRate=10, ConnectionString=slaveconnString }
                 //} //主从数据库开放使用

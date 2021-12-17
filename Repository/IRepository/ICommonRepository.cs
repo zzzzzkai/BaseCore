@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Repository.IRepository
 {
-    public interface ICommonRepository :IBaseRepository<UserInfo>
+    public interface ICommonRepository :IBaseRepository<Tokens>
     {
         bool InitDB();
     }

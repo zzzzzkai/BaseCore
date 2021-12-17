@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Service.IService
 {
-    public interface ICommonService : IBaseService<UserInfo>
+    public interface ICommonService : IBaseService<Tokens>
     {
         bool VerifyCode(string phone, string code);
         bool SendVerifyCode(string phoneNumber, ref string msg);

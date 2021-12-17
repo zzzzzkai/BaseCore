@@ -15,14 +15,7 @@ namespace Service.IService
         /// <param name="end"></param>
         /// <returns></returns>
         object GetPersonSumList(string type, int start, int end);
-        /// <summary>
-        /// 号源修改
-        /// </summary>
-        /// <param name="date_Time">日期</param>
-        /// <param name="personSum_Code">时段code</param>
-        /// <param name="type">体检类型</param>
-        /// <returns></returns>
-        bool PersonSumUpDate(DateTime date_Time, string personSum_Code, string type,ref string error);
+
 
         object  GetBooknosum(string bookdate, string ptype);
 

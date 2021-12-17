@@ -130,15 +130,11 @@ namespace DataModel.Other
         //public dynamic data; 
         public parameterData data;
         public commonSum SumData;
-        public Orders OrdData;
         public TokenParData TokenData;
         public H_Admin AdminData;
         public H_Role RoleData;
-        public tj_lnc Tjlnc;
         public List<PersonSum> person;
-        public List<TeamSum> TeamSums;
         public SumTime sumTime;
-        public PayRecord payRecord;
         public string encryStr
         {
             get { return _encryStr; }
@@ -150,17 +146,11 @@ namespace DataModel.Other
                 {
                     throw new Exception("加密失败");
                 }
-                //this.data = JsonConvert.DeserializeObject<dynamic>(serializeStr);
                 this.data = JsonConvert.DeserializeObject<parameterData>(serializeStr);
                 this.SumData = JsonConvert.DeserializeObject<commonSum>(serializeStr);
-                //this.person = JsonConvert.DeserializeObject<List<PersonSum>>(serializeStr);
-                this.OrdData = JsonConvert.DeserializeObject<Orders>(serializeStr);
                 this.TokenData = JsonConvert.DeserializeObject<TokenParData>(serializeStr);
                 this.AdminData = JsonConvert.DeserializeObject<H_Admin>(serializeStr);
                 this.RoleData= JsonConvert.DeserializeObject<H_Role>(serializeStr);
-                //this.Tjlnc = JsonConvert.DeserializeObject<tj_lnc>(serializeStr);
-                //this.TeamSums = JsonConvert.DeserializeObject<List<TeamSum>>(serializeStr);
-                this.payRecord = JsonConvert.DeserializeObject<PayRecord>(serializeStr);
 
                 this._encryStr = value;
             }

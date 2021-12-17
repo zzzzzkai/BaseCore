@@ -7,9 +7,9 @@ using System.Text;
 namespace Repository.IRepository
 {	
 	/// <summary>
-	/// IOrderRepository
+	/// IOtherBillRepository
 	/// </summary>	
-	public interface IOrdersRepository : IBaseRepository<Orders>
+	public interface IOtherBillRepository : IBaseRepository<OtherBill>
     {
 
        
